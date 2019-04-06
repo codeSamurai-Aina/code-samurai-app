@@ -20,7 +20,7 @@ function databaseInitialize() {
     Item = db.getCollection("items");
     if (User === null) {
         User = db.addCollection("users");
-        User.insert({username:'admin',password:'admin'});
+        User.insert({username:'Aina28',password:'unicorn'});
         User.insert({username:'user',password:'user'});
     }
     if (Item === null) {
@@ -111,8 +111,13 @@ app.post('/login', function (request, response) {
     //hint: check is password is good or not, if not load same page with error as below
     //response.render('index', {message: "Invalid user name or password"});
 
-    response.render('listpage', {items: Item.find()});
-
+    
+    if(userPasswordMatch (loginName, password)==true){
+        response.render('listpage', {items: Item.find()});
+    }
+    else{
+        
+    }
 });
 
 
@@ -121,8 +126,18 @@ app.post('/login', function (request, response) {
 app.post('/saveitem', function (request, response) {
 
     // hint #1: find the helper function that will help save the information first
+    
+    var allItems=  saveFormAndReturnAllItems(request.body);
+    
+    
+
     // hint #2: make sure to send the list of items to the list page
 
-    response.render('listpage',{ items:[] });
+    response.render('listpage',{ items: allItems });
 });
 
+app.get('/like', function (request, response) {
+    var song = request.query.song;
+     var allItems=  likeAndSort('songName', song);
+    response.render('listpage',{ items: allItems });
+});
